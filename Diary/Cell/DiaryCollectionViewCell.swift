@@ -26,8 +26,11 @@ class DiaryCollectionViewCell: UICollectionViewCell {
     lazy var contentLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 14)
-        label.textColor = UIColor(named: <#T##String#>)
-    }
+
+        
+        return label
+        
+    }()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
