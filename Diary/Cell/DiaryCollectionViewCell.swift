@@ -11,7 +11,6 @@ class DiaryCollectionViewCell: UICollectionViewCell {
     
     static let cellID: String = "diary"
     
- 
     lazy var titleLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 18)
@@ -26,8 +25,11 @@ class DiaryCollectionViewCell: UICollectionViewCell {
     lazy var contentLabel: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 14)
+        label.textColor = UIColor(named: "DarkGrey")
+        label.text = "여기에는 내용이 들어갑니다 네 여기에는 내용이 들어가요  네 여기에는 내용이 들어가요"
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.numberOfLines = 3
 
-        
         return label
         
     }()
@@ -36,14 +38,19 @@ class DiaryCollectionViewCell: UICollectionViewCell {
         super.init(frame: frame)
 
         setContentViewConfig()
-        setTitleConfig()
+        setCellContentsLayout()
     }
     
-    private func setTitleConfig() {
+    private func setCellContentsLayout() {
+        /* Title */
         titleLabel.topAnchor.constraint(equalTo: contentView.topAnchor, constant: 10).isActive = true
         titleLabel.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 10).isActive = true
-        titleLabel.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: 10).isActive = true
-
+        titleLabel.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -10).isActive = true
+        
+        /* Contents Description */
+        contentLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 4).isActive = true
+        contentLabel.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 10).isActive = true
+        contentLabel.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -10).isActive = true
     }
     
     
@@ -53,11 +60,9 @@ class DiaryCollectionViewCell: UICollectionViewCell {
         contentView.layer.borderColor = UIColor(named: "BorderColor")?.cgColor
         contentView.layer.cornerRadius = 12
 
-
-        
         /* Add SubViews */
         contentView.addSubview(titleLabel)
-
+        contentView.addSubview(contentLabel)
     }
     
     required init?(coder: NSCoder) {

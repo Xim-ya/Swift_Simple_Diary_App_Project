@@ -17,6 +17,8 @@
 		6FCF376B28092D3200DA10B8 /* DiaryCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FCF376A28092D3200DA10B8 /* DiaryCollectionViewCell.swift */; };
 		6FCF376D28092D4500DA10B8 /* DiaryModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FCF376C28092D4500DA10B8 /* DiaryModel.swift */; };
 		6FCF377028092DE300DA10B8 /* DiaryVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FCF376F28092DE300DA10B8 /* DiaryVM.swift */; };
+		6FCF379328095ABC00DA10B8 /* DiaryDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FCF379228095ABC00DA10B8 /* DiaryDetailViewController.swift */; };
+		6FCF379528095F5300DA10B8 /* AddDairyViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FCF379428095F5300DA10B8 /* AddDairyViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -32,6 +34,8 @@
 		6FCF376A28092D3200DA10B8 /* DiaryCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryCollectionViewCell.swift; sourceTree = "<group>"; };
 		6FCF376C28092D4500DA10B8 /* DiaryModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryModel.swift; sourceTree = "<group>"; };
 		6FCF376F28092DE300DA10B8 /* DiaryVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryVM.swift; sourceTree = "<group>"; };
+		6FCF379228095ABC00DA10B8 /* DiaryDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiaryDetailViewController.swift; sourceTree = "<group>"; };
+		6FCF379428095F5300DA10B8 /* AddDairyViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddDairyViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -83,6 +87,8 @@
 				6FCF376328091AF800DA10B8 /* FavoriteViewController.swift */,
 				6FCF376528091B3F00DA10B8 /* TableViewController.swift */,
 				6FCF376728091BAF00DA10B8 /* DiaryContainerViewController.swift */,
+				6FCF379228095ABC00DA10B8 /* DiaryDetailViewController.swift */,
+				6FCF379428095F5300DA10B8 /* AddDairyViewController.swift */,
 			);
 			path = ViewController;
 			sourceTree = "<group>";
@@ -182,8 +188,10 @@
 			buildActionMask = 2147483647;
 			files = (
 				6FCF376D28092D4500DA10B8 /* DiaryModel.swift in Sources */,
+				6FCF379328095ABC00DA10B8 /* DiaryDetailViewController.swift in Sources */,
 				6FCF374F2808EE3500DA10B8 /* AppDelegate.swift in Sources */,
 				6FCF376828091BAF00DA10B8 /* DiaryContainerViewController.swift in Sources */,
+				6FCF379528095F5300DA10B8 /* AddDairyViewController.swift in Sources */,
 				6FCF376428091AF800DA10B8 /* FavoriteViewController.swift in Sources */,
 				6FCF377028092DE300DA10B8 /* DiaryVM.swift in Sources */,
 				6FCF376628091B3F00DA10B8 /* TableViewController.swift in Sources */,

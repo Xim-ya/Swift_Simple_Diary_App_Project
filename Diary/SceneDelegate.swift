@@ -22,8 +22,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // 뷰 컨트롤러 인스턴스 가져오기
         let vc = TableViewController()
         
-        // 네비게이션 컨트롤러 설정
-//        let nacVC = UINavigationController(rootViewController: vc)
         
         window?.rootViewController = vc
         window?.makeKeyAndVisible()

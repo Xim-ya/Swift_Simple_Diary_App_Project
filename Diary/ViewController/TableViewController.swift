@@ -13,7 +13,7 @@ class TableViewController: UITabBarController {
         super.viewDidLoad()
         
         // Load VicewController Instance
-        let diaryContainerVC = DiaryContainerViewController()
+        let diaryContainerVC = AddDairyViewController()
         let favoriteVC = FavoriteViewController()
         
         // Set ViewController Title
