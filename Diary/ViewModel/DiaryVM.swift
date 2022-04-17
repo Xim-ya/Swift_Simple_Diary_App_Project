@@ -1,11 +1,5 @@
-//
-//  DiaryVM.swift
-//  Diary
-//
-//  Created by 이해주 on 2022/04/15.
-//
 
-import Foundation
+import UIKit
 
 
 class DiaryVM: ObservableObject {
@@ -14,6 +8,20 @@ class DiaryVM: ObservableObject {
     
     func diaryList() -> [Diary] {
         return model.diaryList
+    }
+    
+    func selectedDiary(_ indexPath: Int) -> Diary {
+        return model.diaryList[indexPath]
+    }
+    
+    func toggleFavorite(_ indexPath: Int, _ barBtn: UIBarButtonItem) {
+        let isFavorite = diaryList()[indexPath].isFavorite
+        if isFavorite {
+            barBtn.image = UIImage(systemName: "star")
+        } else {
+            barBtn.image = UIImage(systemName: "star.fill")
+        }
+        return model.toggleFavorite(indexPath)
     }
     
     func addDiary(diary: Diary) {

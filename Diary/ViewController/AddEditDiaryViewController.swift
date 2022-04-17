@@ -1,17 +1,28 @@
+/*
+일기를 추가하는 기능과 일기 수정 찾기 기능을 담당하는 View Controller
+이전 View Controller에서 전달 받은 값(isRoutedForDiaryDetail)에 따라 다른 UI 컴퍼넌트와 기능을 제공.
+중복 코드를 최소하기 위해 해당 ViewController안에서 예외처리를 진행함.
+*/
+
 import UIKit
 
-class AddDairyViewController: UIViewController {
+class AddEditDiaryViewController: UIViewController {
     /* State & Constant Variables */
+    let isRoutedForDiaryDetail: Bool
     var diaryVM: DiaryVM?
+    let selectedIndex: Int?
     var delegate: UpdateViewDelegate?
     
+    
     // Fetch View Model
-    init(vm: DiaryVM) {
+    init(vm: DiaryVM, isRoutedForDiaryDetail: Bool, selectedIndex: Int?) {
         self.diaryVM = vm
+        self.isRoutedForDiaryDetail = isRoutedForDiaryDetail
+        self.selectedIndex  = selectedIndex
         super.init(nibName: nil, bundle: nil)
     }
     
-    let isEditable = true
+    var isEditable = true
     let placeHolders = ["제목을 입력하세요" , "내용을 입력하세요", "날짜를 선택하세요"]
     
     lazy var titleLabel: UILabel = {
@@ -76,22 +87,52 @@ class AddDairyViewController: UIViewController {
         textView.tag = 2
         textView.isEditable = false
         textView.textContainer.maximumNumberOfLines = 1
-        let gesture = UITapGestureRecognizer(target: self, action:  #selector(showDatePickerAlert))
-        textView.addGestureRecognizer(gesture)
         
+        let gesture = UITapGestureRecognizer(target: self, action:  #selector(showDatePickerAlert))
+        if !isRoutedForDiaryDetail {
+            textView.addGestureRecognizer(gesture)
+        }
+
         return textView
     }()
     
     lazy var addBarBtnItem: UIBarButtonItem = {
         let barBtnItem = UIBarButtonItem(title: "추가", style: .plain, target: self, action: #selector(addDiaryHandler))
         barBtnItem.tintColor = .gray
-        barBtnItem.isEnabled = isEditable
+        barBtnItem.isEnabled = false
         
         return barBtnItem
     }()
+    
+    lazy var groupButton: UIStackView = {
+        var editConfig = UIButton.Configuration.plain()
+        editConfig.title = "수정"
+        editConfig.baseForegroundColor = .systemBlue
 
+        var delConfig = editConfig
+        delConfig.title = "삭제"
+        delConfig.baseForegroundColor = .systemRed
 
-  
+        let editBtn = UIButton(configuration: editConfig, primaryAction: nil)
+        let delBtn = UIButton(configuration: delConfig, primaryAction: nil)
+
+        let stackView = UIStackView()
+        stackView.addArrangedSubview(editBtn)
+        stackView.addArrangedSubview(delBtn)
+        stackView.spacing = 8
+        stackView.translatesAutoresizingMaskIntoConstraints = false
+
+        return stackView
+    }()
+
+    lazy var favBarBtn: UIBarButtonItem = {
+        let barBtn = UIBarButtonItem(image: nil, style: .done, target: self, action: #selector(toggleFavorite))
+        barBtn.tintColor = .systemYellow
+        
+        return barBtn
+    }()
+    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -102,15 +143,51 @@ class AddDairyViewController: UIViewController {
         view.addSubview(dateTitleLabel)
         view.addSubview(dateTextView)
         self.navigationItem.rightBarButtonItem = addBarBtnItem
-        
         setLayout()
-        setContentSectionLayout()
+        
+        if isRoutedForDiaryDetail {
+            setDetailDiaryFeature()
+        }
+    }
+    
+    // 즐겨찾기 Toggle 메소드
+    @objc private func toggleFavorite() {
+        diaryVM?.toggleFavorite(selectedIndex!, favBarBtn)
     }
     
     
-    // MARK: Set Components Configuartions
-    private func setContentSectionLayout() {
+    
+    // Diary 인스턴스를 호출하여 받아옴
+    private func fetchSelectedDiary() {
+        let selectedDiary: DiaryVM.Diary = (diaryVM?.selectedDiary(selectedIndex!))!
+        titleTextView.text = selectedDiary.title
+        titleTextView.textColor = .black
+        contentTextView.text = selectedDiary.content
+        contentTextView.textColor = .black
+        dateTextView.text = selectedDiary.date
+        dateTextView.textColor = .black
     }
+
+    // `일기 상세페이지` 기능이 필요할 경우 추가적으로 필요한 기능들을 셋팅
+    private func setDetailDiaryFeature() {
+        fetchSelectedDiary()
+        // GroupButton 설정
+        view.addSubview(groupButton)
+        groupButton.topAnchor.constraint(equalTo: dateTextView.bottomAnchor, constant: 30).isActive = true
+        groupButton.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
+        
+        // RightBarButton 설정
+        self.navigationItem.rightBarButtonItem = favBarBtn
+        guard let isPassedDiaryFavorite = diaryVM?.selectedDiary(selectedIndex!).isFavorite else { return }
+        if isPassedDiaryFavorite {
+            favBarBtn.image = UIImage(systemName: "star.fill")
+        } else {
+            favBarBtn.image = UIImage(systemName: "star")
+        }
+  
+    }
+    
+
     
     private func setLayout() {
         /* Title */
@@ -128,8 +205,9 @@ class AddDairyViewController: UIViewController {
         contentTitleLabel.topAnchor.constraint(equalTo: titleTextView.bottomAnchor, constant: 40).isActive = true
         
         /* TextView */
+        let responsiveHeight = view.frame.size.height * 0.2
         contentTextView.topAnchor.constraint(equalTo: contentTitleLabel.bottomAnchor, constant: 6).isActive = true
-        contentTextView.heightAnchor.constraint(equalToConstant: 260).isActive = true
+        contentTextView.heightAnchor.constraint(equalToConstant: responsiveHeight).isActive = true
         contentTextView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 16).isActive = true
         contentTextView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -16).isActive = true
         
@@ -141,7 +219,7 @@ class AddDairyViewController: UIViewController {
         dateTextView.topAnchor.constraint(equalTo: dateTitleLabel.bottomAnchor, constant: 6).isActive = true
         dateTextView.leftAnchor.constraint(equalTo: view.leftAnchor, constant: 16).isActive = true
         dateTextView.rightAnchor.constraint(equalTo: view.rightAnchor, constant: -16).isActive = true
-   
+        
     }
     
     // MARK: Reusble Attribute Functions
@@ -153,6 +231,7 @@ class AddDairyViewController: UIViewController {
         label.font = UIFont.systemFont(ofSize: 18, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false
         
+        
         return label
     }
     
@@ -163,7 +242,7 @@ class AddDairyViewController: UIViewController {
         textView.layer.borderColor = UIColor(named: "BorderColor")?.cgColor
         textView.layer.cornerRadius = 12
         textView.layer.borderWidth = 1
-        textView.isEditable = isEditable
+        textView.isEditable = !isRoutedForDiaryDetail
         textView.font = UIFont.systemFont(ofSize: 14)
         textView.textColor = .gray
         textView.textContainerInset = UIEdgeInsets(top: 20, left: 20, bottom: 20, right: 20)
@@ -197,7 +276,7 @@ class AddDairyViewController: UIViewController {
         dateChooserAlert.view.heightAnchor.constraint(equalToConstant: 300).isActive = true
         
         present(dateChooserAlert, animated: true, completion: nil)
-
+        
     }
     
     /// Validation Check, if Input Filled turn on Toggle Item Button
@@ -220,16 +299,18 @@ class AddDairyViewController: UIViewController {
         let diary =  DiaryModel.Diary(id: UUID(), title: titleTextView.text, content: contentTextView.text, date: dateTextView.text)
         diaryVM?.addDiary(diary: diary)
         delegate?.reloadCollectionView()
+        _ = navigationController?.popToRootViewController(animated: true) // 이전 View Controller로 이동
+        
     }
-
+    
     
     required init(coder: NSCoder) {
-      fatalError("init(coder) has not been implemented")
+        fatalError("init(coder) has not been implemented")
     }
 }
 
-extension AddDairyViewController: UITextViewDelegate {
-        
+extension AddEditDiaryViewController: UITextViewDelegate {
+    
     // Set TextFiled Interaction Effect.
     func textViewDidBeginEditing(_ textView: UITextView) {
         switch textView.tag {
@@ -237,7 +318,7 @@ extension AddDairyViewController: UITextViewDelegate {
             if titleTextView.text == placeHolders[0] {
                 titleTextView.text = nil
                 titleTextView.textColor = .black
-            
+                
             }
         case 1 :
             if contentTextView.text == placeHolders[1] {
@@ -270,7 +351,7 @@ extension AddDairyViewController: UITextViewDelegate {
             validationCheck()
         }
     }
-
+    
     
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         switch textView.tag {
@@ -308,36 +389,11 @@ extension AddDairyViewController: UITextViewDelegate {
         alert.addAction(confirmBtn)
         present(alert, animated: true, completion: nil)
     }
-    
-    
-    
-    
 }
 
 
 
 /// Edit Diary View Controller 에서 사용
-//lazy var groupButton: UIStackView = {
-//    var editConfig = UIButton.Configuration.plain()
-//    editConfig.title = "수정"
-//    editConfig.baseForegroundColor = .blue
-//
-//    var delConfig = editConfig
-//    delConfig.title = "삭제"
-//    delConfig.baseForegroundColor = .red
-//
-//
-//    let editBtn = UIButton(configuration: editConfig, primaryAction: nil)
-//    let delBtn = UIButton(configuration: delConfig, primaryAction: nil)
-//
-//    let stackView = UIStackView()
-//    stackView.addArrangedSubview(editBtn)
-//    stackView.addArrangedSubview(delBtn)
-//    stackView.spacing = 8
-//    stackView.translatesAutoresizingMaskIntoConstraints = false
-//
-//    return stackView
-//}()
-//
+
 
 

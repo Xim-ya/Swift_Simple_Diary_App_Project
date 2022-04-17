@@ -15,7 +15,7 @@ class DiaryCollectionViewCell: UICollectionViewCell {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 18)
         label.textColor = .black
-        label.text = "제목입니다"
+        label.text = "제목 없음"
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 2
         
@@ -26,7 +26,7 @@ class DiaryCollectionViewCell: UICollectionViewCell {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 14)
         label.textColor = UIColor(named: "DarkGrey")
-        label.text = "여기에는 내용이 들어갑니다 네 여기에는 내용이 들어가요  네 여기에는 내용이 들어가요"
+        label.text = "내용 없음"
         label.translatesAutoresizingMaskIntoConstraints = false
         label.numberOfLines = 3
 

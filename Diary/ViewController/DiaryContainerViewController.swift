@@ -6,7 +6,7 @@ class DiaryContainerViewController: UIViewController, UpdateViewDelegate {
     var diaryVM = DiaryVM() // VIEW MODEL
   
     lazy var addBarButton: UIBarButtonItem = {
-        let barBtn = UIBarButtonItem(image: UIImage(systemName: "plus"), style: UIBarButtonItem.Style.done, target: self, action: #selector(routeToDetailVC))
+        let barBtn = UIBarButtonItem(image: UIImage(systemName: "plus"), style: UIBarButtonItem.Style.done, target: self, action: #selector(routeToAddDiaryVC))
         
         return barBtn
     }()
@@ -51,8 +51,8 @@ class DiaryContainerViewController: UIViewController, UpdateViewDelegate {
     // MARK: Intent
     
     ///  Route To AddDiarVC
-    @objc func routeToDetailVC() {
-        let vc = AddDairyViewController(vm: diaryVM)
+    @objc func routeToAddDiaryVC() {
+        let vc = AddEditDiaryViewController(vm: diaryVM, isRoutedForDiaryDetail: false, selectedIndex: nil)
         vc.delegate = self
         self.navigationController?.pushViewController(vc, animated: true)
     }
@@ -91,7 +91,9 @@ extension DiaryContainerViewController: UICollectionViewDelegate, UICollectionVi
     
     /// didSeleItemAt 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        self.navigationController?.pushViewController(DiaryDetailViewController(), animated: true)
+        let vc = AddEditDiaryViewController(vm: diaryVM, isRoutedForDiaryDetail: true, selectedIndex: indexPath.item)
+        vc.delegate = self
+        self.navigationController?.pushViewController(vc, animated: true)
     }
 }
 
