@@ -34,6 +34,17 @@ class DiaryCollectionViewCell: UICollectionViewCell {
         
     }()
     
+    lazy var dateLabel: UILabel = {
+        let label = UILabel()
+        label.font = UIFont.systemFont(ofSize: 16)
+        label.textColor = UIColor(named: "DarkGrey")
+        label.numberOfLines = 2
+        label.textAlignment = .center
+        label.translatesAutoresizingMaskIntoConstraints = false
+
+        return label
+    }()
+    
     override init(frame: CGRect) {
         super.init(frame: frame)
 
@@ -51,6 +62,11 @@ class DiaryCollectionViewCell: UICollectionViewCell {
         contentLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 4).isActive = true
         contentLabel.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 10).isActive = true
         contentLabel.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -10).isActive = true
+        
+        /* Date */
+        dateLabel.bottomAnchor.constraint(equalTo: contentView.bottomAnchor, constant: -10).isActive = true
+        dateLabel.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 10).isActive = true
+        dateLabel.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -10).isActive = true
     }
     
     
@@ -63,6 +79,7 @@ class DiaryCollectionViewCell: UICollectionViewCell {
         /* Add SubViews */
         contentView.addSubview(titleLabel)
         contentView.addSubview(contentLabel)
+        contentView.addSubview(dateLabel)
     }
     
     required init?(coder: NSCoder) {

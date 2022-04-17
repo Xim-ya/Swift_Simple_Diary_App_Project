@@ -8,13 +8,16 @@
 import Foundation
 
 
-class DiaryVM {
-    public var model = DiaryModel()
+class DiaryVM: ObservableObject {
+    @Published public var model = DiaryModel()
     typealias Diary = DiaryModel.Diary
-    
     
     func diaryList() -> [Diary] {
         return model.diaryList
+    }
+    
+    func addDiary(diary: Diary) {
+        model.addDiary(diary: diary)
     }
     
 }

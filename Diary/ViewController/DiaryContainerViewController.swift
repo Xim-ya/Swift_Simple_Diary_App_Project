@@ -1,15 +1,10 @@
-/*
- 1. BottomNavigation Bar
- 
- */
 
 import UIKit
 
-class DiaryContainerViewController: UIViewController {
-    
-    var diaryList = DiaryVM().diaryList()
-    
-    
+class DiaryContainerViewController: UIViewController, UpdateViewDelegate {
+
+    var diaryVM = DiaryVM() // VIEW MODEL
+  
     lazy var addBarButton: UIBarButtonItem = {
         let barBtn = UIBarButtonItem(image: UIImage(systemName: "plus"), style: UIBarButtonItem.Style.done, target: self, action: #selector(routeToDetailVC))
         
@@ -40,7 +35,6 @@ class DiaryContainerViewController: UIViewController {
         /* Set Components Config */
         setCollectionView()
         
-        /* Else */
         
     }
     
@@ -56,8 +50,17 @@ class DiaryContainerViewController: UIViewController {
     
     // MARK: Intent
     
+    ///  Route To AddDiarVC
     @objc func routeToDetailVC() {
-        self.navigationController?.pushViewController(AddDairyViewController(), animated: true)
+        let vc = AddDairyViewController(vm: diaryVM)
+        vc.delegate = self
+        self.navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    /// Delegate Method (when Diary is Added0
+    func reloadCollectionView() {
+        collectionView.reloadData()
+        print("COLLECTION VIEW UPDATED")
     }
 
 
@@ -73,14 +76,15 @@ extension DiaryContainerViewController: UICollectionViewDelegate, UICollectionVi
 
     /// numberOfItemsInSection
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return diaryList.count
+        return diaryVM.diaryList().count
     }
 
     /// cellForItemAt
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: DiaryCollectionViewCell.cellID, for: indexPath) as! DiaryCollectionViewCell
-        cell.titleLabel.text = diaryList[indexPath.item].title
-        cell.contentLabel.text = diaryList[indexPath.item].content
+        cell.titleLabel.text = diaryVM.diaryList()[indexPath.item].title
+        cell.contentLabel.text = diaryVM.diaryList()[indexPath.item].content
+        cell.dateLabel.text = diaryVM.diaryList()[indexPath.item].date
         return cell
     }
     
@@ -89,5 +93,9 @@ extension DiaryContainerViewController: UICollectionViewDelegate, UICollectionVi
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         self.navigationController?.pushViewController(DiaryDetailViewController(), animated: true)
     }
+}
+
+protocol UpdateViewDelegate {
+    func reloadCollectionView()
 }
 
