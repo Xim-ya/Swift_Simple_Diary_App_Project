@@ -3,8 +3,17 @@ import UIKit
 
 class DiaryContainerViewController: UIViewController, UpdateViewDelegate {
 
-    var diaryVM = DiaryVM() // VIEW MODEL
-  
+    var diaryVM: DiaryVM // VIEW MODEL
+    var vcDelegate: ReloadVCDelegate?
+    
+    
+    // Fetch View Model
+    init(vm: DiaryVM?) {
+        self.diaryVM = vm!
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+
     lazy var addBarButton: UIBarButtonItem = {
         let barBtn = UIBarButtonItem(image: UIImage(systemName: "plus"), style: UIBarButtonItem.Style.done, target: self, action: #selector(routeToAddDiaryVC))
         
@@ -12,16 +21,9 @@ class DiaryContainerViewController: UIViewController, UpdateViewDelegate {
     }()
     
     lazy var collectionView: UICollectionView = {
-        let layout = UICollectionViewFlowLayout()
-        layout.minimumLineSpacing = 10
-        layout.scrollDirection = .vertical
-        layout.sectionInset = UIEdgeInsets(top: 0, left: 16, bottom: 0, right: 16)
-        
-        let collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
-        collectionView.translatesAutoresizingMaskIntoConstraints = false
+        let collectionView = ReusebleAttribute.collectionViewAttr()
         collectionView.dataSource = self
         collectionView.delegate = self
-        collectionView.register(DiaryCollectionViewCell.self, forCellWithReuseIdentifier: DiaryCollectionViewCell.cellID)
 
         return collectionView
     }()
@@ -60,7 +62,18 @@ class DiaryContainerViewController: UIViewController, UpdateViewDelegate {
     /// Delegate Method (when Diary is Added0
     func reloadCollectionView() {
         collectionView.reloadData()
-        print("COLLECTION VIEW UPDATED")
+        vcDelegate?.reloadVC(cv: collectionView)
+   
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        collectionView.reloadData()
+    }
+    
+    
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
     }
 
 
