@@ -1,10 +1,3 @@
-//
-//  DiaryCollectionViewCell.swift
-//  Diary
-//
-//  Created by 이해주 on 2022/04/15.
-//
-
 import UIKit
 
 class DiaryCollectionViewCell: UICollectionViewCell {

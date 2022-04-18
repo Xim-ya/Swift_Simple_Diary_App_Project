@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6F202C4B280D220D00A49CFB /* UICollectionView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F202C4A280D220D00A49CFB /* UICollectionView+Extension.swift */; };
+		6F202C4D280D234C00A49CFB /* UITextView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F202C4C280D234C00A49CFB /* UITextView+Extension.swift */; };
 		6FA217AE280CD27500765220 /* ReusebleAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FA217AD280CD27500765220 /* ReusebleAttribute.swift */; };
 		6FCF374F2808EE3500DA10B8 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FCF374E2808EE3500DA10B8 /* AppDelegate.swift */; };
 		6FCF37512808EE3500DA10B8 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FCF37502808EE3500DA10B8 /* SceneDelegate.swift */; };
@@ -22,6 +24,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		6F202C4A280D220D00A49CFB /* UICollectionView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UICollectionView+Extension.swift"; sourceTree = "<group>"; };
+		6F202C4C280D234C00A49CFB /* UITextView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UITextView+Extension.swift"; sourceTree = "<group>"; };
 		6FA217AD280CD27500765220 /* ReusebleAttribute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReusebleAttribute.swift; sourceTree = "<group>"; };
 		6FCF374B2808EE3500DA10B8 /* Diary.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Diary.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6FCF374E2808EE3500DA10B8 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -49,6 +53,15 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		6F202C49280D211500A49CFB /* Extension */ = {
+			isa = PBXGroup;
+			children = (
+				6F202C4A280D220D00A49CFB /* UICollectionView+Extension.swift */,
+				6F202C4C280D234C00A49CFB /* UITextView+Extension.swift */,
+			);
+			path = Extension;
+			sourceTree = "<group>";
+		};
 		6FA217AA280CD19100765220 /* Reuseble */ = {
 			isa = PBXGroup;
 			children = (
@@ -76,6 +89,7 @@
 		6FCF374D2808EE3500DA10B8 /* Diary */ = {
 			isa = PBXGroup;
 			children = (
+				6F202C49280D211500A49CFB /* Extension */,
 				6FA217AA280CD19100765220 /* Reuseble */,
 				6FCF377128092E1900DA10B8 /* Model */,
 				6FCF376E28092DCD00DA10B8 /* ViewModel */,
@@ -196,6 +210,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6FCF376D28092D4500DA10B8 /* DiaryModel.swift in Sources */,
+				6F202C4B280D220D00A49CFB /* UICollectionView+Extension.swift in Sources */,
 				6FCF374F2808EE3500DA10B8 /* AppDelegate.swift in Sources */,
 				6FCF376828091BAF00DA10B8 /* DiaryContainerViewController.swift in Sources */,
 				6FCF379528095F5300DA10B8 /* AddEditDiaryViewController.swift in Sources */,
@@ -205,6 +220,7 @@
 				6FCF376628091B3F00DA10B8 /* TableViewController.swift in Sources */,
 				6FCF376B28092D3200DA10B8 /* DiaryCollectionViewCell.swift in Sources */,
 				6FCF37512808EE3500DA10B8 /* SceneDelegate.swift in Sources */,
+				6F202C4D280D234C00A49CFB /* UITextView+Extension.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

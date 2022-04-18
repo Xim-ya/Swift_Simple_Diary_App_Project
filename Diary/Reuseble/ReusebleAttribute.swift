@@ -1,5 +1,3 @@
-
-
 import UIKit
 
 class ReusebleAttribute {
@@ -11,7 +9,6 @@ class ReusebleAttribute {
         label.textColor = .black
         label.font = UIFont.systemFont(ofSize: 18, weight: .bold)
         label.translatesAutoresizingMaskIntoConstraints = false
-        
         
         return label
     }

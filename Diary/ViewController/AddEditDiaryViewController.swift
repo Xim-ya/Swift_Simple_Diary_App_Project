@@ -11,15 +11,15 @@ class AddEditDiaryViewController: UIViewController {
     let isRoutedForDiaryDetail: Bool
     var isEditingMode = false
     var diaryVM: DiaryVM?
-    let selectedIndex: Int?
     var delegate: UpdateViewDelegate?
+    let selectedId: UUID
     
     
     // Fetch View Model
-    init(vm: DiaryVM, isRoutedForDiaryDetail: Bool, selectedIndex: Int?) {
+    init(vm: DiaryVM, isRoutedForDiaryDetail: Bool, selectedId: UUID) {
         self.diaryVM = vm
         self.isRoutedForDiaryDetail = isRoutedForDiaryDetail
-        self.selectedIndex  = selectedIndex
+        self.selectedId = selectedId
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -147,12 +147,9 @@ class AddEditDiaryViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        view.addSubview(titleLabel)
-        view.addSubview(titleTextView)
-        view.addSubview(contentTitleLabel)
-        view.addSubview(contentTextView)
-        view.addSubview(dateTitleLabel)
-        view.addSubview(dateTextView)
+        [titleLabel, titleTextView, contentTitleLabel, contentTextView, dateTitleLabel, dateTextView].forEach { ele in
+            view.addSubview(ele)
+        }
         self.navigationItem.rightBarButtonItem = addBarBtnItem
         setLayout()
         
@@ -224,7 +221,7 @@ class AddEditDiaryViewController: UIViewController {
     }
     
     /// Validation Check, if Input Filled turn on Toggle Item Button
-    private func validationCheck() {
+    func validationCheck() {
         if isFilledWithInput(titleTextView) && isFilledWithInput(contentTextView) && isFilledWithInput(dateTextView) {
             addBarBtnItem.tintColor = .systemBlue
             addBarBtnItem.isEnabled = true
@@ -241,8 +238,8 @@ class AddEditDiaryViewController: UIViewController {
     /// Add Diary Model Ojbect To View Model Controller
     @objc private func addDiaryHandler() {
         if isRoutedForDiaryDetail {
-            let diary =  DiaryModel.Diary(id: (diaryVM?.selectedDiary(selectedIndex!).id)!, title: titleTextView.text, content: contentTextView.text, date: dateTextView.text)
-            diaryVM?.editDiary(selectedIndex!, diary)
+            let diary =  DiaryModel.Diary(id: selectedId, title: titleTextView.text, content: contentTextView.text, date: dateTextView.text)
+            diaryVM?.editDiary(selectedId, diary)
             delegate?.reloadCollectionView()
             showAlert(title: "수정 완료", message: nil)
         } else {
@@ -256,7 +253,7 @@ class AddEditDiaryViewController: UIViewController {
     
     /// 즐겨찾기 Toggle 메소드
     @objc private func toggleFavorite() {
-        diaryVM?.toggleFavorite(selectedIndex!, favBarBtn)
+        diaryVM?.toggleFavorite(selectedId, favBarBtn)
         delegate?.reloadCollectionView()
     }
     
@@ -264,7 +261,7 @@ class AddEditDiaryViewController: UIViewController {
     
     /// Diary 인스턴스를 호출하여 받아옴
     private func fetchSelectedDiary() {
-        let selectedDiary: DiaryVM.Diary = (diaryVM?.selectedDiary(selectedIndex!))!
+        let selectedDiary: DiaryVM.Diary = (diaryVM?.selectedDiary(selectedId))!
         titleTextView.text = selectedDiary.title
         titleTextView.textColor = .black
         contentTextView.text = selectedDiary.content
@@ -283,7 +280,7 @@ class AddEditDiaryViewController: UIViewController {
         
         // RightBarButton 설정
         self.navigationItem.rightBarButtonItem = favBarBtn
-        guard let isPassedDiaryFavorite = diaryVM?.selectedDiary(selectedIndex!).isFavorite else { return }
+        guard let isPassedDiaryFavorite = diaryVM?.selectedDiary(selectedId)?.isFavorite else { return }
         if isPassedDiaryFavorite {
             favBarBtn.image = UIImage(systemName: "star.fill")
         } else {
@@ -316,11 +313,18 @@ class AddEditDiaryViewController: UIViewController {
         }
     }
     
-    /// 일가 삭제
+    /// 일기 삭제
     @objc func deleteDiary() {
-        diaryVM?.deleteDiary(selectedIndex!)
-        delegate?.reloadCollectionView()
-        _ = navigationController?.popToRootViewController(animated: true)
+        let alert = UIAlertController(title: "경고", message: "정말 삭제하시겠습니까?", preferredStyle: .alert)
+        let cancel = UIAlertAction(title: "취소", style: .cancel, handler: nil)
+        let confirm = UIAlertAction(title: "확인", style: .default) { _ in
+            self.diaryVM?.deleteDiary(self.selectedId)
+            self.delegate?.reloadCollectionView()
+            _ = self.navigationController?.popToRootViewController(animated: true)
+        }
+        alert.addAction(cancel)
+        alert.addAction(confirm)
+        present(alert, animated: true, completion: nil)
     }
     
     
@@ -328,90 +332,4 @@ class AddEditDiaryViewController: UIViewController {
         fatalError("init(coder) has not been implemented")
     }
 }
-
-extension AddEditDiaryViewController: UITextViewDelegate {
-    
-    // Set TextFiled Interaction Effect.
-    func textViewDidBeginEditing(_ textView: UITextView) {
-        switch textView.tag {
-        case 0 :
-            if titleTextView.text == placeHolders[0] {
-                titleTextView.text = nil
-                titleTextView.textColor = .black
-                
-            }
-        case 1 :
-            if contentTextView.text == placeHolders[1] {
-                contentTextView.text = nil
-                contentTextView.textColor = .black
-            }
-        default :
-            print("Doesn't Match")
-        }
-    }
-    
-    // Reset to TextField Initial Condition If User Doesn't Filled Any Text
-    func textViewDidEndEditing(_ textView: UITextView) {
-        switch textView.tag {
-        case 0:
-            setInputFieldInteraction(aimTextView: titleTextView, tag: 0)
-        case 1:
-            setInputFieldInteraction(aimTextView: contentTextView, tag: 1)
-        case 2:
-            setInputFieldInteraction(aimTextView: dateTextView, tag: 2)
-        default :
-            print("Doesn't Match")
-        }
-        
-        func setInputFieldInteraction(aimTextView: UITextView, tag: Int) {
-            if aimTextView.text.isEmpty {
-                aimTextView.text = placeHolders[tag]
-                aimTextView.textColor = .gray
-            }
-            validationCheck()
-        }
-    }
-    
-    
-    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-        switch textView.tag {
-        case 0:
-            let result = setTextInputCondition(aimTextView: titleTextView, maxCh: 24)
-            return result
-        case 1:
-            let result = setTextInputCondition(aimTextView: contentTextView, maxCh: 240)
-            return result
-            
-        default :
-            print("Doesn't Match")
-        }
-        
-        /* Set Max Character Lenght Condition ANd Show Alert Dialog if it needed */
-        func setTextInputCondition(aimTextView: UITextView, maxCh: Int) -> Bool {
-            let currentText = aimTextView.text ?? ""
-            guard let stringRange = Range(range, in: currentText) else { return false }
-            let updatedText = currentText.replacingCharacters(in: stringRange, with: text)
-            validationCheck()
-            if updatedText.count > maxCh {
-                showAlert(title: "경고", message: "최대 입력 가능한 문자를 초과했습니다")
-                return false
-            } else {
-                return updatedText.count <= maxCh
-            }
-            
-        }
-        return true
-    }
-    
-
-    // Alert Dialog
-    private func showAlert(title: String, message: String?) {
-        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        let confirmBtn = UIAlertAction(title: "확인", style: .cancel, handler: nil)
-        alert.addAction(confirmBtn)
-        present(alert, animated: true, completion: nil)
-    }
-}
-
-
 
