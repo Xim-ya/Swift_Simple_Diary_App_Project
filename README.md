@@ -30,7 +30,7 @@
    ```
 - UICollectionView를 선언할 때 위와같이 FlowLayout 객체를 만들고 CollectionView에 할당해줘야됨
     - 그렇지 않을 경우 `Exception NSException * "UICollectionView must be initialized with a non-nil layout parameter" 0x000060000266a430` 오류 발생
-    - 왜 오류가 발생하는가? -> **collectionView에서 FlowLayout이 왜 필요한지 알아봄<a>(내용 정리)<a/>**
+    - 왜 오류가 발생하는가? -> **collectionView에서 FlowLayout이 왜 필요한지 알아봄<a href = "https://github.com/Joo-esc/Swift_Study/blob/main/Swift/UICollectionView.md">(내용 정리)<a/>**
 
 <br>
 
